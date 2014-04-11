@@ -5,7 +5,7 @@
 # Licensed under:
 #  http://creativecommons.org/licenses/by-nc-sa/3.0/
 ##
-
+import csv
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -27,7 +27,7 @@ except Exception,e:
 
 benchmark = xml.getroot()
 check_list = []
-profile_name = "MAC-3_Sensitive"
+profile_name = "MAC-1_Classified"
 profiles = benchmark.findall("{%s}Profile" % xmlns)
 for profile in profiles:
 	if profile.get("id") == profile_name:
@@ -40,6 +40,10 @@ for profile in profiles:
 groups = benchmark.findall("{%s}Group" % xmlns)
 
 print "ID\tVersion\tRule Title\tTitle\tSeverity\tIA Controls"
+
+csvfile = open('tmp.csv', 'wb')
+output = csv.writer(csvfile, dialect='excel')
+
 for group in groups:
 	group_id = group.get("id")
 	if group_id in check_list:
@@ -48,9 +52,13 @@ for group in groups:
 		version = group.find("{%s}Rule/{%s}version" % (xmlns, xmlns)).text
 		rule_title = group.find("{%s}Rule/{%s}title" % (xmlns, xmlns)).text
 		desctag = "{%s}Rule/{%s}description" % (xmlns, xmlns)
+		fixtext = group.find("{%s}Rule/{%s}fixtext" % (xmlns, xmlns)).text
+		check = group.find("{%s}Rule/{%s}check/{%s}check-content" % (xmlns, xmlns, xmlns)).text
 		descriptiontext = group.find(desctag).text
 		encodedDesc = descriptiontext.replace("&gt;", ">").replace("&lt;", "<").replace("&", "&amp;")
 		innerXML = "<desc>%s</desc>" % format(encodedDesc)
 		xml = ET.XML(innerXML)
 		iacontrols = xml.find("IAControls").text
-		print "%s\t%s\t%s\t%s\t%s\t%s\t" % (group_id.replace('\n', '##').replace('V-',''), version.replace('\n', '##'), rule_title.replace('\n', '##'), title.replace('\n', '##'), severity.replace('\n', '##'), iacontrols.replace('\n', '##'))
+		vulndisc = xml.find("VulnDiscussion").text
+
+		output.writerow( (group_id.replace('\n', '##').replace('V-',''), version.replace('\n', '##'), rule_title.replace('\n', '##'), title.replace('\n', '##'), severity.replace('\n', '##'), check, fixtext) )
