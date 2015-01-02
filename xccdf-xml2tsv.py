@@ -39,7 +39,7 @@ for profile in profiles:
 					
 groups = benchmark.findall("{%s}Group" % xmlns)
 
-print "ID\tVersion\tRule Title\tTitle\tSeverity\tIA Controls"
+
 
 csvfile = open('tmp.csv', 'wb')
 output = csv.writer(csvfile, dialect='excel')
@@ -53,7 +53,10 @@ for group in groups:
 		rule_title = group.find("{%s}Rule/{%s}title" % (xmlns, xmlns)).text
 		desctag = "{%s}Rule/{%s}description" % (xmlns, xmlns)
 		fixtext = group.find("{%s}Rule/{%s}fixtext" % (xmlns, xmlns)).text
-		check = group.find("{%s}Rule/{%s}check/{%s}check-content" % (xmlns, xmlns, xmlns)).text
+		try:
+			check = group.find("{%s}Rule/{%s}check/{%s}check-content" % (xmlns, xmlns, xmlns)).text
+		except:
+			check = "(Missing - did you use an OVAL benchmark instead of a Manual XCCDF?)"
 		descriptiontext = group.find(desctag).text
 		encodedDesc = descriptiontext.replace("&gt;", ">").replace("&lt;", "<").replace("&", "&amp;")
 		innerXML = "<desc>%s</desc>" % format(encodedDesc)
