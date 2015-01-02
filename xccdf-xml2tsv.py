@@ -43,7 +43,7 @@ groups = benchmark.findall("{%s}Group" % xmlns)
 
 csvfile = open('tmp.csv', 'wb')
 output = csv.writer(csvfile, dialect='excel')
-
+output.writerow(('STIG ID', 'Version', 'Rule Title', 'Title', 'Severity', 'Check Text', 'Fix Text'))
 for group in groups:
 	group_id = group.get("id")
 	if group_id in check_list:
