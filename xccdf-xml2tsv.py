@@ -43,7 +43,7 @@ groups = benchmark.findall("{%s}Group" % xmlns)
 
 csvfile = open('tmp.csv', 'wb')
 output = csv.writer(csvfile, dialect='excel')
-output.writerow(('STIG ID', 'Version', 'Rule Title', 'Title', 'Severity', 'Check Text', 'Fix Text'))
+output.writerow(('STIG ID', 'Version', 'Rule Title', 'Title', 'Severity', 'Check Text', 'Fix Text', 'CCI'))
 for group in groups:
 	group_id = group.get("id")
 	if group_id in check_list:
@@ -53,6 +53,7 @@ for group in groups:
 		rule_title = group.find("{%s}Rule/{%s}title" % (xmlns, xmlns)).text
 		desctag = "{%s}Rule/{%s}description" % (xmlns, xmlns)
 		fixtext = group.find("{%s}Rule/{%s}fixtext" % (xmlns, xmlns)).text
+		cci = group.find("{%s}Rule/{%s}ident" % (xmlns, xmlns)).text
 		try:
 			check = group.find("{%s}Rule/{%s}check/{%s}check-content" % (xmlns, xmlns, xmlns)).text
 		except:
@@ -64,4 +65,4 @@ for group in groups:
 		iacontrols = xml.find("IAControls").text
 		vulndisc = xml.find("VulnDiscussion").text
 
-		output.writerow( (group_id.replace('\n', '##').replace('V-',''), version.replace('\n', '##'), rule_title.replace('\n', '##'), title.replace('\n', '##'), severity.replace('\n', '##'), check, fixtext) )
+		output.writerow( (group_id.replace('\n', '##').replace('V-',''), version.replace('\n', '##'), rule_title.replace('\n', '##'), title.replace('\n', '##'), severity.replace('\n', '##'), check, fixtext, cci) )
