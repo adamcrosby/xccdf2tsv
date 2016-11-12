@@ -43,7 +43,7 @@ groups = benchmark.findall("{%s}Group" % xmlns)
 
 csvfile = open('tmp.csv', 'wb')
 output = csv.writer(csvfile, dialect='excel')
-output.writerow(('STIG ID', 'Version', 'Rule Title', 'Title', 'Severity', 'Check Text', 'Fix Text'))
+output.writerow(('STIG ID', 'Version', 'Rule Title', 'Title', 'Severity', 'Check Text', 'Fix Text', 'CCI'))
 for group in groups:
 	group_id = group.get("id")
 	if group_id in check_list:
@@ -55,8 +55,10 @@ for group in groups:
 		fixtext = group.find("{%s}Rule/{%s}fixtext" % (xmlns, xmlns)).text
 		try:
 			check = group.find("{%s}Rule/{%s}check/{%s}check-content" % (xmlns, xmlns, xmlns)).text
+			cci = group.find("{%s}Rule/{%s}ident" % (xmlns, xmlns)).text
 		except:
 			check = "(Missing - did you use an OVAL benchmark instead of a Manual XCCDF?)"
+			cci = "(Missing CCI Number may be an older STIG)"
 		descriptiontext = group.find(desctag).text
 		encodedDesc = descriptiontext.replace("&gt;", ">").replace("&lt;", "<").replace("&", "&amp;")
 		innerXML = "<desc>%s</desc>" % format(encodedDesc)
@@ -64,4 +66,4 @@ for group in groups:
 		iacontrols = xml.find("IAControls").text
 		vulndisc = xml.find("VulnDiscussion").text
 
-		output.writerow( (group_id.replace('\n', '##').replace('V-',''), version.replace('\n', '##'), rule_title.replace('\n', '##'), title.replace('\n', '##'), severity.replace('\n', '##'), check, fixtext) )
+		output.writerow( (group_id.replace('\n', '##').replace('V-',''), version.replace('\n', '##'), rule_title.replace('\n', '##'), title.replace('\n', '##'), severity.replace('\n', '##'), check, fixtext, cci) )
