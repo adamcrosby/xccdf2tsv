@@ -53,11 +53,12 @@ for group in groups:
 		rule_title = group.find("{%s}Rule/{%s}title" % (xmlns, xmlns)).text
 		desctag = "{%s}Rule/{%s}description" % (xmlns, xmlns)
 		fixtext = group.find("{%s}Rule/{%s}fixtext" % (xmlns, xmlns)).text
-		cci = group.find("{%s}Rule/{%s}ident" % (xmlns, xmlns)).text
 		try:
 			check = group.find("{%s}Rule/{%s}check/{%s}check-content" % (xmlns, xmlns, xmlns)).text
+			cci = group.find("{%s}Rule/{%s}ident" % (xmlns, xmlns)).text
 		except:
 			check = "(Missing - did you use an OVAL benchmark instead of a Manual XCCDF?)"
+			cci = "(Missing CCI Number may be an older STIG)"
 		descriptiontext = group.find(desctag).text
 		encodedDesc = descriptiontext.replace("&gt;", ">").replace("&lt;", "<").replace("&", "&amp;")
 		innerXML = "<desc>%s</desc>" % format(encodedDesc)
