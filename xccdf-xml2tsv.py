@@ -3,7 +3,7 @@
 ###
 # (C) 2010 Adam Crosby
 # Licensed under:
-#  http://creativecommons.org/licenses/by-nc-sa/3.0/
+#  http://creativecommons.org/licenses/by-sa/3.0/
 ##
 import csv
 import sys
