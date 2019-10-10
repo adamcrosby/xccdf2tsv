@@ -21,8 +21,7 @@ if len(sys.argv) != 2:
 	print ("  E.g.:\n\t %s U_Perimeter_Router_v8R2_manual.xccdf.xml > output.tsv" % sys.argv[0])
 	sys.exit(0)
 try:
-	#xml = ET.parse(sys.argv[1])
-	xml = ET.parse("U_ASD_STIG_V4R9_Manual-xccdf.xml")
+	xml = ET.parse(sys.argv[1])
 except Exception:
 	print ("Error, unable to parse XML document.  Are you sure that's XCCDF?")
 	sys.exit(-1)
