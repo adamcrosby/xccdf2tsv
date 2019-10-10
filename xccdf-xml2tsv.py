@@ -21,7 +21,8 @@ if len(sys.argv) != 2:
 	print ("  E.g.:\n\t %s U_Perimeter_Router_v8R2_manual.xccdf.xml > output.tsv" % sys.argv[0])
 	sys.exit(0)
 try:
-	xml = ET.parse(sys.argv[1])
+	#xml = ET.parse(sys.argv[1])
+	xml = ET.parse("U_ASD_STIG_V4R9_Manual-xccdf.xml")
 except Exception:
 	print ("Error, unable to parse XML document.  Are you sure that's XCCDF?")
 	sys.exit(-1)
@@ -63,8 +64,13 @@ for group in groups:
 		descriptiontext = group.find(desctag).text
 		encodedDesc = descriptiontext.replace("&gt;", ">").replace("&lt;", "<").replace("&", "&amp;")
 		innerXML = "<desc>%s</desc>" % format(encodedDesc)
-		xml = ET.XML(innerXML)
-		iacontrols = xml.find("IAControls").text
-		vulndisc = xml.find("VulnDiscussion").text
+		try:
+			xml = ET.XML(innerXML)
+			iacontrols = xml.find("IAControls").text
+			vulndisc = xml.find("VulnDiscussion").text
+		except:
+			print ("Skipping a check because of DISA Stupidity" )
+			iacontrols = ""
+			vulndisc = ""
 
 		output.writerow( (group_id.replace('\n', '##').replace('V-',''), version.replace('\n', '##'), rule_title.replace('\n', '##'), title.replace('\n', '##'), severity.replace('\n', '##'), check, fixtext, cci) )
